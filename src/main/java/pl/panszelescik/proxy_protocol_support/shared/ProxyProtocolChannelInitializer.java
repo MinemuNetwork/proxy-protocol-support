@@ -38,6 +38,15 @@ public class ProxyProtocolChannelInitializer extends ChannelInitializer<Channel>
 
         // --- Connection Triage Logic ---
 
+        if (ProxyProtocolSupport.proxyServerIPs.isEmpty() && ProxyProtocolSupport.directAccessIPs.isEmpty()) {
+            ProxyProtocolSupport.debugLogger.accept("Accepted connection from: " + remoteIp);
+            channel.pipeline()
+                    .addAfter("timeout", "haproxy-decoder", new HAProxyMessageDecoder())
+                    .addAfter("haproxy-decoder", "haproxy-handler", new ProxyProtocolHandler());
+            return;
+        }
+
+
         // 1. Check if the connection is from a configured Trusted Proxy.
         // These connections MUST provide a PROXY protocol header.
         for (CIDRMatcher matcher : ProxyProtocolSupport.proxyServerIPs) {
