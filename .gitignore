@@ -130,3 +130,12 @@ docker/forge/banned-players.json
 docker/forge/ops.json
 docker/forge/whitelist.json
 docker/forge/usercache.json
+docker/forge/usernamecache.json
+docker/forge/.forge-manifest.json
+docker/forge/.run-forge.env
+docker/forge/.rcon-cli.*
+docker/forge/run.sh
+docker/forge/run.bat
+docker/forge/user_jvm_args.txt
+docker/forge/config/fml.toml
+docker/forge/config/forge-common.toml
