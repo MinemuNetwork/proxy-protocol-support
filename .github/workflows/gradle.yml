@@ -53,6 +53,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: ${{ matrix.gradle }}
+          cache-disabled: true
 
       - name: Build mc${{ matrix.mc }}
         run: >
