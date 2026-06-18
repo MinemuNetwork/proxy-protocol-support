@@ -49,11 +49,9 @@ jobs:
           java-version: ${{ matrix.java }}
           distribution: temurin
 
-      - name: Setup Gradle ${{ matrix.gradle }}
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          gradle-version: ${{ matrix.gradle }}
-          cache-disabled: true
+      - name: Set Gradle wrapper to ${{ matrix.gradle }}
+        run: |
+          sed -i "s/gradle-[0-9.]*-bin.zip/gradle-${{ matrix.gradle }}-bin.zip/" gradle/wrapper/gradle-wrapper.properties
 
       - name: Build mc${{ matrix.mc }}
         run: >
