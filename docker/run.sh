@@ -9,7 +9,7 @@ cd "$PROJECT_DIR"
 ./gradlew build --no-daemon
 
 echo "[2/3] Copying JAR to mods folder..."
-cp build/libs/proxy_protocol_support-*.jar "$SCRIPT_DIR/forge/mods/"
+find build/libs -maxdepth 1 -name "proxy_protocol_support-*.jar" ! -name "*-slim.jar" -exec cp {} "$SCRIPT_DIR/forge/mods/" \;
 
 echo "[3/3] Starting Docker containers..."
 cd "$SCRIPT_DIR"
