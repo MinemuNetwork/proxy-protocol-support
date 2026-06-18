@@ -5,9 +5,9 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.haproxy.HAProxyCommand;
 import io.netty.handler.codec.haproxy.HAProxyMessage;
 import net.minecraft.network.Connection;
+import pl.panszelescik.proxy_protocol_support.shared.IConnectionAddressSetter;
 import pl.panszelescik.proxy_protocol_support.shared.ProxyProtocolSupport;
 import pl.panszelescik.proxy_protocol_support.shared.config.CIDRMatcher;
-import pl.panszelescik.proxy_protocol_support.shared.mixin.ProxyProtocolAddressSetter;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -64,7 +64,7 @@ public class ProxyProtocolHandler extends ChannelInboundHandlerAdapter {
                         }
                     }
 
-                    ((ProxyProtocolAddressSetter) connection).setAddress(socketAddr);
+                    ((IConnectionAddressSetter) (Object) connection).setProxyProtocolAddress(socketAddr);
                 }
             } catch (Exception e) {
                 ProxyProtocolSupport.exceptionLogger.accept("Error while handling HAProxyMessage!", e);

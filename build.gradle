@@ -5,16 +5,28 @@ buildscript {
     }
     dependencies {
         classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
+        classpath "net.minecraftforge.gradle:ForgeGradle:${forgeGradleVersion}"
     }
 }
 
 plugins {
-    id 'net.minecraftforge.gradle' version '5.+'
     id 'com.github.johnrengelman.shadow' version '7.+'
     id 'java'
 }
 
+apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
+
+sourceSets {
+    main {
+        java {
+            srcDir "src/${versionSourceDir}/java"
+        }
+        resources {
+            srcDir "src/${versionSourceDir}/resources"
+        }
+    }
+}
 
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(javaVersion as int)
