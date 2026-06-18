@@ -1,6 +1,6 @@
 services:
   forge:
-    image: itzg/minecraft-server
+    image: itzg/minecraft-server:java17
     container_name: forge-test
     environment:
       EULA: "TRUE"
