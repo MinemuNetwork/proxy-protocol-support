@@ -60,3 +60,4 @@ jobs:
           -PforgeVersion=${{ matrix.forge }}
           -PforgeGradleVersion=${{ matrix.fg }}
           -PversionSourceDir=${{ matrix.src }}
+          -PjavaVersion=${{ matrix.java }}
