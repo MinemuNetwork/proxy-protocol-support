@@ -150,16 +150,18 @@ jar {
 shadowJar {
     archiveClassifier = ''
     configurations = [project.configurations.shade]
-    finalizedBy 'reobfShadowJar'
 }
 
 assemble.dependsOn shadowJar
 
-reobf {
-    shadowJar {}
+afterEvaluate {
+    if (tasks.findByName('reobfJar') != null) {
+        jar.finalizedBy('reobfJar')
+    }
+    if (tasks.findByName('reobfShadowJar') != null) {
+        shadowJar.finalizedBy('reobfShadowJar')
+    }
 }
-
-jar.finalizedBy('reobfJar')
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
