@@ -116,3 +116,17 @@ run/
 
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
 !gradle-wrapper.jar
+
+# Docker test environment - generated files
+docker/forge/world/
+docker/forge/logs/
+docker/forge/libraries/
+docker/forge/plugins/
+docker/forge/downloads/
+docker/forge/eula.txt
+docker/forge/server.properties
+docker/forge/banned-ips.json
+docker/forge/banned-players.json
+docker/forge/ops.json
+docker/forge/whitelist.json
+docker/forge/usercache.json
