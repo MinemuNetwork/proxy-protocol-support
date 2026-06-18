@@ -33,7 +33,7 @@ jobs:
             java: 17
             gradle: "8.10"
           - mc: "1.21"
-            forge: "51.1.0"
+            forge: "51.0.33"
             fg: "6.+"
             src: "v1.21"
             java: 21
