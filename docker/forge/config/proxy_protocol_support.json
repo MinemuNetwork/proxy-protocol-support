@@ -1,5 +1,7 @@
 {
   "enable-proxy-protocol": true,
-  "proxy-protocol-whitelisted-ips": ["172.25.0.10"],
+  "proxy-protocol-whitelisted-ips": [
+    "172.25.0.10"
+  ],
   "whitelistTCPShieldServers": false
 }
