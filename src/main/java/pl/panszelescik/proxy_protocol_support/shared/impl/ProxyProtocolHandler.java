@@ -7,13 +7,12 @@ import io.netty.handler.codec.haproxy.HAProxyMessage;
 import net.minecraft.network.Connection;
 import pl.panszelescik.proxy_protocol_support.shared.IConnectionAddressSetter;
 import pl.panszelescik.proxy_protocol_support.shared.ProxyProtocolSupport;
-import pl.panszelescik.proxy_protocol_support.shared.config.CIDRMatcher;
 
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 
 /**
- * Reads HAProxyMessage to set valid Player IP
+ * Reads HAProxyMessage to set the player's real IP address.
+ * IP whitelist validation is handled by ProxyProtocolChannelInitializer.
  *
  * @author PanSzelescik
  * @see io.netty.handler.codec.haproxy.HAProxyMessage
@@ -23,54 +22,35 @@ public class ProxyProtocolHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         if (msg instanceof HAProxyMessage) {
+            HAProxyMessage message = ((HAProxyMessage) msg);
             try {
-                HAProxyMessage message = ((HAProxyMessage) msg);
                 if (message.command() == HAProxyCommand.PROXY) {
                     final String realAddress = message.sourceAddress();
                     final int realPort = message.sourcePort();
 
+                    if (realAddress == null) {
+                        ProxyProtocolSupport.warnLogger.accept("Received PROXY header but source address was null. Closing connection.");
+                        ctx.close();
+                        return;
+                    }
+
                     final InetSocketAddress socketAddr = new InetSocketAddress(realAddress, realPort);
 
                     Connection connection = ((Connection) ctx.channel().pipeline().get("packet_handler"));
-                    SocketAddress proxyAddress = connection.getRemoteAddress();
-
-                    if (!ProxyProtocolSupport.whitelistedIPs.isEmpty()) {
-                        if (proxyAddress instanceof InetSocketAddress) {
-                            InetSocketAddress proxySocketAddress = ((InetSocketAddress) proxyAddress);
-                            boolean isWhitelistedIP = false;
-
-                            for (CIDRMatcher matcher : ProxyProtocolSupport.whitelistedIPs) {
-                                if (matcher.matches(proxySocketAddress.getAddress())) {
-                                    isWhitelistedIP = true;
-                                    break;
-                                }
-                            }
-
-                            if (!isWhitelistedIP) {
-                                if (ctx.channel().isOpen()) {
-                                    ctx.disconnect();
-                                    ProxyProtocolSupport.warnLogger.accept("Blocked proxy IP: " + proxySocketAddress + " when tried to connect!");
-                                }
-                                return;
-                            }
-                        } else {
-                            ProxyProtocolSupport.warnLogger.accept("**********************************************************************");
-                            ProxyProtocolSupport.warnLogger.accept("* Detected other SocketAddress than InetSocketAddress!               *");
-                            ProxyProtocolSupport.warnLogger.accept("* Please report it with logs to mod author to provide compatibility! *");
-                            ProxyProtocolSupport.warnLogger.accept("* https://github.com/PanSzelescik/proxy-protocol-support/issues      *");
-                            ProxyProtocolSupport.warnLogger.accept("**********************************************************************");
-                            ProxyProtocolSupport.warnLogger.accept(proxyAddress.getClass().toString());
-                            ProxyProtocolSupport.warnLogger.accept(proxyAddress.toString());
-                        }
-                    }
 
                     ((IConnectionAddressSetter) (Object) connection).setProxyProtocolAddress(socketAddr);
                 }
-            } catch (Exception e) {
-                ProxyProtocolSupport.exceptionLogger.accept("Error while handling HAProxyMessage!", e);
+            } finally {
+                message.release();
             }
         } else {
             super.channelRead(ctx, msg);
         }
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        ProxyProtocolSupport.warnLogger.accept("Connection without valid Proxy Protocol: " + ctx.channel().remoteAddress());
+        ctx.close();
     }
 }

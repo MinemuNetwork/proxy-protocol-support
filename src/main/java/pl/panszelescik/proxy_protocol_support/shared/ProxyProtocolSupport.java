@@ -24,6 +24,7 @@ public class ProxyProtocolSupport {
     public static Consumer<String> infoLogger = System.out::println;
     public static Consumer<String> warnLogger = System.out::println;
     public static Consumer<String> errorLogger = System.out::println;
+    public static Consumer<String> debugLogger = s -> {};
     public static BiConsumer<String, Exception> exceptionLogger = (s, e) -> {
         errorLogger.accept(s);
         e.printStackTrace();
@@ -64,6 +65,7 @@ public class ProxyProtocolSupport {
             infoLogger = slf4j::info;
             warnLogger = slf4j::warn;
             errorLogger = slf4j::error;
+            debugLogger = slf4j::debug;
             exceptionLogger = slf4j::error;
         } catch (Throwable ignored) {
             try {
@@ -71,11 +73,13 @@ public class ProxyProtocolSupport {
                 infoLogger = log4j::info;
                 warnLogger = log4j::warn;
                 errorLogger = log4j::error;
+                debugLogger = log4j::debug;
                 exceptionLogger = log4j::error;
             } catch (Throwable ignored2) {
                 infoLogger = System.out::println;
                 warnLogger = System.out::println;
                 errorLogger = System.out::println;
+                debugLogger = s -> {};
                 exceptionLogger = (s, e) -> {
                     errorLogger.accept(s);
                     e.printStackTrace();
