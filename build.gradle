@@ -150,6 +150,10 @@ jar {
 shadowJar {
     archiveClassifier = ''
     configurations = [project.configurations.shade]
+
+    from("${buildDir}/tmp/compileJava") {
+        include "*.refmap.json"
+    }
 }
 
 assemble.dependsOn shadowJar
