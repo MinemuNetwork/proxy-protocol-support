@@ -27,40 +27,40 @@ Permite usar [TCPShield](https://tcpshield.com/), [HAProxy](https://www.haproxy.
 ./gradlew build
 ```
 
-El JAR se genera en `build/libs/proxy_protocol_support-<version>.jar`.
-
-### Otras versiones
+### 1.20.x y 1.21
 
 Cada versión se compila pasando propiedades por línea de comandos:
 
 ```bash
-# 1.20.1
+# 1.20.1 — requiere Gradle 8.x
 ./gradlew wrapper --gradle-version 8.10
 ./gradlew build --no-daemon \
   -PminecraftVersion=1.20.1 \
   -PforgeVersion=47.3.0 \
   -PforgeGradleVersion=6.+ \
-  -PversionSourceDir=v1.20.1
+  -PversionSourceDir=v1.20.1 \
+  -PjavaVersion=17
 
 # 1.20.4
 ./gradlew build --no-daemon \
   -PminecraftVersion=1.20.4 \
   -PforgeVersion=49.0.50 \
   -PforgeGradleVersion=6.+ \
-  -PversionSourceDir=v1.20.4
+  -PversionSourceDir=v1.20.4 \
+  -PjavaVersion=17
 
-# 1.21
+# 1.21 — requiere Gradle 8.x y Java 21
 ./gradlew build --no-daemon \
   -PminecraftVersion=1.21 \
-  -PforgeVersion=51.1.0 \
+  -PforgeVersion=51.0.33 \
   -PforgeGradleVersion=6.+ \
-  -PjavaVersion=21 \
-  -PversionSourceDir=v1.21
+  -PversionSourceDir=v1.21 \
+  -PjavaVersion=21
 ```
 
-> **Nota:** 1.20+ requiere Gradle 8.x (ForgeGradle 6). 1.19.4 usa Gradle 7.x (ForgeGradle 5).
-> El wrapper del repositorio está configurado para 1.19.4 por defecto.
-> Para 1.21 se necesita Java 21.
+El JAR se genera en `build/libs/proxy_protocol_support-1.1.0-forge-mc<version>.jar`.
+
+> **Nota:** 1.20+ requiere Gradle 8.x (ForgeGradle 6). 1.19.4 usa Gradle 7.x (ForgeGradle 5). El wrapper del repositorio está configurado para 1.19.4 por defecto. El CI compila automáticamente las 4 versiones con el Gradle y Java correctos.
 
 ---
 
