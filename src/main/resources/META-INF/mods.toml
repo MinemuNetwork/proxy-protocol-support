@@ -8,8 +8,7 @@ version="${file.jarVersion}"
 displayName="Proxy Protocol Support"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/proxy-protocol-support"
 authors="PanSzelescik"
-displayTest="IGNORE_ALL_VERSION"
-side = "SERVER"
+displayTest="IGNORE_SERVER_VERSION"
 description='''
 Proxy Protocol support for Forge servers
 '''
